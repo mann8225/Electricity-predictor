@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bhopal Electricity Predictor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(120deg, #ffffff, #f3f4f6);
+      --text-color: #121212;
+      --box-bg: rgba(255, 255, 255, 0.95);
+      --input-bg: #fff;
+      --input-text: #000;
+      --input-border: #ccc;
+      --button-bg: #007bff;
+      --button-hover: #0056b3;
+      --highlight: #ffc107;
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient: linear-gradient(120deg, #0f0f0f, #1a1a1a);
+      --text-color: #f5f5f5;
+      --box-bg: rgba(32, 32, 32, 0.95);
+      --input-bg: #1e1e1e;
+      --input-text: #f5f5f5;
+      --input-border: #444;
+      --button-bg: #f72585;
+      --button-hover: #7209b7;
+      --highlight: #00ffe1;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-gradient);
+      background-size: 300% 300%;
+      animation: gradientMove 10s ease infinite;
+      color: var(--text-color);
+      transition: all 0.5s ease;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 30px;
+      background: var(--box-bg);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-left: 20px;
+    }
+
+    .toggle-theme {
+      background: var(--button-bg);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .toggle-theme:hover {
+      background: var(--button-hover);
+    }
+
+    .hero, .section {
+      max-width: 960px;
+      margin: 50px auto;
+      padding: 20px;
+      background: var(--box-bg);
+      border-radius: 20px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+      color: var(--text-color);
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    input, button {
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--input-border);
+    }
+
+    input {
+      background-color: var(--input-bg);
+      color: var(--input-text);
+    }
+
+    input:focus {
+      border-color: var(--button-bg);
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+    }
+
+    button {
+      background: var(--button-bg);
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background: var(--button-hover);
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: var(--box-bg);
+      padding: 20px;
+      border-radius: 12px;
+      min-width: 220px;
+      box-shadow: 0 0 10px var(--highlight);
+      text-align: center;
+      color: var(--text-color);
+      border: 1px solid var(--input-border);
+    }
+
+    .scroll-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--button-bg);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      cursor: pointer;
+      border: none;
+    }
+
+    canvas {
+      margin-top: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-color);
+      opacity: 0.8;
+    }
+
+    @media (max-width: 640px) {
+      nav { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body data-aos-easing="ease-in-out" data-aos-duration="700">
+  <nav>
+    <div><strong>🔌 Bhopal Electricity Predictor</strong></div>
+    <div>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <button class="toggle-theme" onclick="toggleTheme()">🌙 Toggle Mode</button>
+    </div>
+  </nav>
+
+  <div class="hero" data-aos="fade-up">
+    <h1>Bhopal Electricity Consumption Predictor</h1>
+    <p style="text-align:center;">AI-powered forecasts tailored for Bhopal.</p>
+    <form id="predictionForm">
+      <label>Year</label>
+      <input type="number" id="year" required />
+      <label>Month (1–12)</label>
+      <input type="number" id="month" min="1" max="12" required />
+      <button type="submit">🔍 Predict</button>
+    </form>
+  </div>
+
+  <div class="section" data-aos="fade-up">
+    <h2>Forecast Preview</h2>
+    <canvas id="resultChart" height="100"></canvas>
+  </div>
+
+  <div class="section" data-aos="fade-up">
+    <h2>Features</h2>
+    <div class="cards">
+      <div class="card">📈 12-Month Forecast Chart</div>
+      <div class="card">🔁 Modular Design</div>
+      <div class="card">🌐 User Friendly Interface</div>
+      <div class="card">📄 Dynamic Visualization</div>
+      <div class="card">💡 Energy Saving Tips</div>
+      <div class="card">🌙 Light/Dark Mode</div>
+    </div>
+  </div>
+
+  <div class="section" data-aos="fade-up">
+    <h2>Why This Prediction?</h2>
+    <p style="text-align:center;">We consider weather, seasonal patterns, and city growth trends for high-accuracy electricity consumption predictions.</p>
+  </div>
+
+  <div class="section" data-aos="fade-up">
+    <h2>User Feedback</h2>
+    <div class="cards">
+      <div class="card">"Accurate and fast!"<br><strong>- Mayank N.</strong></div>
+      <div class="card">"Clean UI, insightful charts."<br><strong>- Pratam K.</strong></div>
+      <div class="card">"Great for planning!"<br><strong>- Satyam S.</strong></div>
+    </div>
+  </div>
+
+  <div class="section" data-aos="fade-up">
+    <h2>💡 Energy Tip</h2>
+    <p id="energyTip" style="text-align:center;">Turn off unused devices to save power.</p>
+  </div>
+
+  <footer>
+    <b>Electricity Consumption Prediction Model</b>
+  </footer>
+
+  <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="scroll-top">⬆</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+    const now = new Date();
+    document.getElementById("year").value = now.getFullYear();
+    document.getElementById("month").value = now.getMonth() + 1;
+
+    function toggleTheme() {
+      const theme = document.documentElement.getAttribute("data-theme");
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "light" : "dark");
+      updateChartColors();
+    }
+
+    const tips = [
+      "Use LED bulbs to save power.",
+      "Turn off fans and lights when not in use.",
+      "Clean AC filters regularly.",
+      "Unplug devices when not charging.",
+      "Use energy-efficient appliances."
+    ];
+    let currentTip = 0;
+    setInterval(() => {
+      currentTip = (currentTip + 1) % tips.length;
+      document.getElementById("energyTip").innerText = tips[currentTip];
+    }, 6000);
+
+    const ctx = document.getElementById('resultChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Electricity Consumption (MWh)',
+          data: [],
+          borderColor: getComputedStyle(document.body).getPropertyValue('--button-bg').trim(),
+          backgroundColor: 'rgba(0, 123, 255, 0.2)',
+          fill: true,
+          tension: 0.2,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: {
+              color: getComputedStyle(document.body).getPropertyValue('--text-color')
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: getComputedStyle(document.body).getPropertyValue('--text-color')
+            }
+          },
+          y: {
+            beginAtZero: false,
+            ticks: {
+              color: getComputedStyle(document.body).getPropertyValue('--text-color')
+            }
+          }
+        }
+      }
+    });
+
+    function updateChartColors() {
+      chart.data.datasets[0].borderColor = getComputedStyle(document.body).getPropertyValue('--button-bg').trim();
+      chart.options.plugins.legend.labels.color = getComputedStyle(document.body).getPropertyValue('--text-color');
+      chart.options.scales.x.ticks.color = getComputedStyle(document.body).getPropertyValue('--text-color');
+      chart.options.scales.y.ticks.color = getComputedStyle(document.body).getPropertyValue('--text-color');
+      chart.update();
+    }
+
+    const predictionForm = document.getElementById('predictionForm');
+    const resultDiv = document.createElement('div');
+    resultDiv.style.marginTop = '20px';
+    resultDiv.style.padding = '15px';
+    resultDiv.style.borderRadius = '10px';
+    resultDiv.style.fontWeight = '600';
+    resultDiv.style.fontSize = '1.2rem';
+    resultDiv.style.textAlign = 'center';
+    resultDiv.style.display = 'none';
+    document.querySelector('.hero').appendChild(resultDiv);
+
+    predictionForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const year = parseInt(document.getElementById('year').value);
+      const month = parseInt(document.getElementById('month').value);
+
+      if (month < 1 || month > 12) {
+        resultDiv.style.color = '#dc3545';
+        resultDiv.textContent = 'Please enter a valid month between 1 and 12.';
+        resultDiv.style.display = 'block';
+        return;
+      }
+
+      resultDiv.style.display = 'none';
+      resultDiv.textContent = '';
+
+      try {
+        const response = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ year, month })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // Find prediction for the selected month in the returned data array
+          const currentMonthStr = `${year}-${month.toString().padStart(2, '0')}`;
+          const currentPrediction = data.data.find(d => d.month === currentMonthStr);
+
+          if (currentPrediction) {
+            resultDiv.style.color = getComputedStyle(document.body).getPropertyValue('--button-bg').trim();
+            resultDiv.textContent = `Predicted Electricity Consumption for ${month}/${year}: ${currentPrediction.value} MWh`;
+            resultDiv.style.display = 'block';
+          } else {
+            resultDiv.style.color = '#dc3545';
+            resultDiv.textContent = 'Prediction for selected month not found.';
+            resultDiv.style.display = 'block';
+          }
+
+          // Update the chart with all predicted months
+          chart.data.labels = data.data.map(d => d.month);
+          chart.data.datasets[0].data = data.data.map(d => d.value);
+          chart.update();
+
+        } else {
+          resultDiv.style.color = '#dc3545';
+          resultDiv.textContent = `Error: ${data.error || 'Unknown error'}`;
+          resultDiv.style.display = 'block';
+        }
+
+      } catch (error) {
+        resultDiv.style.color = '#dc3545';
+        resultDiv.textContent = 'Server error. Please try again later.';
+        resultDiv.style.display = 'block';
+      }
+    });
+
+  </script>
+</body>
+</html>

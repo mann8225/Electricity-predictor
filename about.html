@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Bhopal Electricity Predictor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(120deg, #ffffff, #f3f4f6);
+      --text-color: #121212;
+      --box-bg: rgba(255, 255, 255, 0.95);
+      --input-bg: #fff;
+      --input-text: #000;
+      --input-border: #ccc;
+      --button-bg: #007bff;
+      --button-hover: #0056b3;
+      --highlight: #ffc107;
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient: linear-gradient(120deg, #0f0f0f, #1a1a1a);
+      --text-color: #f5f5f5;
+      --box-bg: rgba(32, 32, 32, 0.95);
+      --input-bg: #1e1e1e;
+      --input-text: #f5f5f5;
+      --input-border: #444;
+      --button-bg: #f72585;
+      --button-hover: #7209b7;
+      --highlight: #00ffe1;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-gradient);
+      background-size: 300% 300%;
+      animation: gradientMove 10s ease infinite;
+      color: var(--text-color);
+      transition: all 0.5s ease;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 30px;
+      background: var(--box-bg);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-left: 20px;
+    }
+
+    .toggle-theme {
+      background: var(--button-bg);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .toggle-theme:hover {
+      background: var(--button-hover);
+    }
+
+    .section {
+      max-width: 960px;
+      margin: 50px auto;
+      padding: 30px;
+      background: var(--box-bg);
+      border-radius: 20px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-color);
+      opacity: 0.8;
+    }
+
+    @media (max-width: 640px) {
+      nav { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div><strong>🔌 Bhopal Predictor</strong></div>
+    <div>
+      <a href="/">Home</a>
+      <a href="about.html">About</a>
+      <button class="toggle-theme" onclick="toggleTheme()">🌙 Toggle Mode</button>
+    </div>
+  </nav>
+
+  <div class="section" data-aos="fade-up">
+    <h1>About This Project</h1>
+    <p>
+      The <strong>Bhopal Electricity Predictor</strong> is an AI-powered tool designed to help residents and businesses in Bhopal forecast their monthly electricity consumption.
+      By leveraging historical data, seasonal trends, and machine learning models, our system generates reliable predictions that can aid in budgeting and energy conservation planning.
+    </p>
+  </div>
+
+  <div class="section" data-aos="fade-up">
+    <h2>🔍 How It Works</h2>
+    <p>
+      Users simply select a year and month. The system feeds these inputs to a trained regression model, which then estimates the total electricity usage for that period.
+      The model accounts for patterns such as increased consumption in summer and decreased usage in winter. Results are visualized through charts and can also be downloaded as reports.
+    </p>
+  </div>
+
+  <div class="section" data-aos="fade-up">
+    <h2>🛠 Technologies Used</h2>
+    <ul>
+      <li>Python + Flask for backend</li>
+      <li>Scikit-learn for ML model training</li>
+      <li>HTML5, CSS3, JS for frontend</li>
+      <li>Chart.js for interactive visualizations</li>
+      <li>AOS for scroll animations</li>
+      <li>Light/Dark Theme using CSS variables</li>
+    </ul>
+  </div>
+
+  <div class="section" data-aos="fade-up">
+    <h2>👨‍💻 Future Scope</h2>
+    <p>
+      <ul>
+        <li>Extend predictions to multiple cities
+        <li>Include CSV upload for batch predictions
+        <li>Add login/user profile system
+      </ul>
+    </p>
+  </div>
+
+  <div class="section" data-aos="fade-up">
+    <h2>📬 Contact</h2>
+    <p>
+      Got questions or suggestions? Reach out to us at:<br>
+      <strong>Email:</strong> bhopal.predictor.team@gmail.com<br>
+    </p>
+  </div>
+
+  <footer>
+    <b>Electricity Consumption Prediction Model<b> 
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+    function toggleTheme() {
+      const theme = document.documentElement.getAttribute("data-theme");
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "light" : "dark");
+    }
+  </script>
+</body>
+</html>
